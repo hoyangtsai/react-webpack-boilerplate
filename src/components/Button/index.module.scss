@@ -1,0 +1,14 @@
+.button {
+    border: 1px solid #FFF;
+    background: transparent;
+    border-radius: 4px;
+    color: #FFF;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 10px 20px;
+
+    &[disabled] {
+        pointer-events: none;
+        cursor: default;
+    }
+}
