@@ -4,7 +4,7 @@
   "description": "react 17 with webpack 5 boilerplate",
   "main": "src/index.js",
   "scripts": {
-    "serve": "webpack serve --mode development",
+    "dev": "webpack serve --mode development",
     "build": "webpack --mode production"
   },
   "keywords": [
