@@ -43,5 +43,3 @@ Production
 ```bash
 npm run build
 ```
-
-Let's it.
