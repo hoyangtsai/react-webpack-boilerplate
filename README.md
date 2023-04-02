@@ -1,8 +1,8 @@
 # react webpack boilerplate
 
-A straightforward react 17 with webpack 5 boilerplate
+A simple web app boilerplate with react 18 and webpack 5
 
-## Features
+## Spec
 
 ### Webpack
 
