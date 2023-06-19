@@ -2,6 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
+const openBrowser = require('react-dev-utils/openBrowser')
 
 module.exports = (env, argv) => {
   const isDevelopment = argv.mode === 'development';
@@ -10,17 +11,22 @@ module.exports = (env, argv) => {
     // Where files should be sent once they are bundled
     output: {
       path: path.join(__dirname, '/dist'),
-      filename: 'index.bundle.js'
+      filename: '[name].[contenthash:8].bundle.js',
+      publicPath: '.',
     },
     // webpack 5 comes with devServer which loads in development mode
     devServer: {
       port: 3000,
-      open: {
-        app: {
-          name: 'google chrome'
+      watchFiles: ['src/**/*'],
+      historyApiFallback: true,
+      onListening: function (devServer) {
+        if (!devServer) {
+          throw new Error('webpack-dev-server is not defined');
         }
+        const addr = devServer.server.address();
+        const url = addr.address === '::' ? 'localhost' : addr.address;
+        openBrowser(`http://${url}:${addr.port}`);
       },
-      watchFiles: ['src/**/*']
     },
     module: {
       rules: [
