@@ -1,16 +1,17 @@
 {
   "name": "react-webpack-boilerplate",
   "version": "1.0.0",
-  "description": "react 17 with webpack 5 boilerplate",
+  "description": "react 18 with webpack 5 boilerplate",
   "main": "src/index.js",
   "scripts": {
     "dev": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "build": "rm -rf dist && webpack --mode production"
   },
   "keywords": [
     "react",
     "webpack",
-    "boilerplate"
+    "boilerplate",
+    "template"
   ],
   "author": "Hoyang Tsai",
   "license": "ISC",
@@ -43,6 +44,7 @@
     "postcss-loader": "^6.2.1",
     "sass-loader": "^13.2.2",
     "style-loader": "^3.3.2",
+    "terser-webpack-plugin": "^5.3.9",
     "webpack": "^5.77.0",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.13.2"
