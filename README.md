@@ -12,8 +12,8 @@ A simple web app boilerplate with react 18 and webpack 5
 
 ### Loaders
 
-- babel-loader
-- eslint-loader
+- JS
+  - babel-loader
 
 - CSS
   - style-loader
@@ -30,6 +30,7 @@ A simple web app boilerplate with react 18 and webpack 5
 - html-webpack-plugin
 - mini-css-extract-plugin
 - terser-webpack-plugin - For removing 3rd party library license comments
+- eslint-webpack-plugin
 
 ## Command
 
