@@ -2,6 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const openBrowser = require('react-dev-utils/openBrowser')
 
 module.exports = (env, argv) => {
@@ -11,8 +12,9 @@ module.exports = (env, argv) => {
     // Where files should be sent once they are bundled
     output: {
       path: path.join(__dirname, '/dist'),
-      filename: '[name].[contenthash:8].bundle.js',
-      publicPath: '.',
+      filename: isDevelopment ? '[name].js' : '[name].[contenthash:8].bundle.js',
+      chunkFilename: isDevelopment ? '[name].js' : '[name].[contenthash:8].js',
+      assetModuleFilename: 'assets/[contenthash:8][ext]',
     },
     // webpack 5 comes with devServer which loads in development mode
     devServer: {
@@ -24,7 +26,7 @@ module.exports = (env, argv) => {
           throw new Error('webpack-dev-server is not defined');
         }
         const addr = devServer.server.address();
-        const url = addr.address === '::' ? 'localhost' : addr.address;
+        const url = addr.address === '::' ? '0.0.0.0' : addr.address;
         openBrowser(`http://${url}:${addr.port}`);
       },
     },
@@ -99,10 +101,51 @@ module.exports = (env, argv) => {
               }
             }
           ]
-        }
+        },
+        {
+          test: /\.(png|svg|jpg|jpeg|gif|json)$/i,
+          type: 'asset/resource',
+        },
       ]
     },
     optimization: {
+      chunkIds: 'named',
+      splitChunks: {
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendor',
+            priority: 10,
+            chunks: 'initial'
+          },
+          commons: {
+            name: 'commons',
+            minChunks: 3, // minimum common number
+            priority: 5,
+            reuseExistingChunk: true
+          },
+          lib: {
+            test(module) {
+              return (
+                module.size() > 160000 &&
+                /node_modules[/\\]/.test(module.nameForCondition() || '')
+              )
+            },
+            name(module) {
+              const packageNameArr = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/);
+              const packageName = packageNameArr ? packageNameArr[1] : '';
+              // npm package names are URL-safe, but some servers don't like @ symbols
+              return `lib.${packageName.replace("@", "")}`;
+            },
+            priority: 15,
+            minChunks: 1,
+            reuseExistingChunk: true,
+          },
+        },
+      },
+      runtimeChunk: {
+        name: 'runtime',
+      },
       minimizer: [
         new TerserPlugin({
           parallel: true,
@@ -122,7 +165,8 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: isDevelopment ? '[name].css' : '[name].[hash].css',
         chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
-      })
+      }),
+      new ESLintPlugin()
     ],
     resolve: {
       extensions: ['.js', '.jsx'],
