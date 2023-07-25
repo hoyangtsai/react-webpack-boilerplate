@@ -1,13 +1,13 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const TerserPlugin = require('terser-webpack-plugin')
-const ESLintPlugin = require('eslint-webpack-plugin')
-const openBrowser = require('react-dev-utils/openBrowser')
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
+const openBrowser = require('react-dev-utils/openBrowser');
 
 module.exports = (env, argv) => {
   const isDevelopment = argv.mode === 'development';
-  
+
   return {
     // Where files should be sent once they are bundled
     output: {
@@ -41,13 +41,13 @@ module.exports = (env, argv) => {
               options: {
                 cacheDirectory: true,
                 cacheCompression: false,
-              }
+              },
             },
-          ]
+          ],
         },
         {
           test: /\.css$/,
-          use: ['style-loader', 'css-loader']
+          use: ['style-loader', 'css-loader'],
         },
         {
           test: /\.module\.s(a|c)ss$/,
@@ -57,26 +57,24 @@ module.exports = (env, argv) => {
               loader: 'css-loader',
               options: {
                 modules: true,
-                sourceMap: isDevelopment
-              }
+                sourceMap: isDevelopment,
+              },
             },
             {
               loader: 'postcss-loader',
               options: {
                 postcssOptions: {
-                  plugins: [
-                    ["autoprefixer"]
-                  ]
-                }
-              }
+                  plugins: [['autoprefixer']],
+                },
+              },
             },
             {
               loader: 'sass-loader',
               options: {
-                sourceMap: isDevelopment
-              }
-            }
-          ]
+                sourceMap: isDevelopment,
+              },
+            },
+          ],
         },
         {
           test: /\.s(a|c)ss$/,
@@ -88,25 +86,23 @@ module.exports = (env, argv) => {
               loader: 'postcss-loader',
               options: {
                 postcssOptions: {
-                  plugins: [
-                    ["autoprefixer"]
-                  ]
-                }
-              }
+                  plugins: [['autoprefixer']],
+                },
+              },
             },
             {
               loader: 'sass-loader',
               options: {
-                sourceMap: isDevelopment
-              }
-            }
-          ]
+                sourceMap: isDevelopment,
+              },
+            },
+          ],
         },
         {
           test: /\.(png|svg|jpg|jpeg|gif|json)$/i,
           type: 'asset/resource',
         },
-      ]
+      ],
     },
     optimization: {
       chunkIds: 'named',
@@ -116,26 +112,23 @@ module.exports = (env, argv) => {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendor',
             priority: 10,
-            chunks: 'initial'
+            chunks: 'initial',
           },
           commons: {
             name: 'commons',
             minChunks: 3, // minimum common number
             priority: 5,
-            reuseExistingChunk: true
+            reuseExistingChunk: true,
           },
           lib: {
             test(module) {
-              return (
-                module.size() > 160000 &&
-                /node_modules[/\\]/.test(module.nameForCondition() || '')
-              )
+              return module.size() > 160000 && /node_modules[/\\]/.test(module.nameForCondition() || '');
             },
             name(module) {
               const packageNameArr = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/);
               const packageName = packageNameArr ? packageNameArr[1] : '';
               // npm package names are URL-safe, but some servers don't like @ symbols
-              return `lib.${packageName.replace("@", "")}`;
+              return `lib.${packageName.replace('@', '')}`;
             },
             priority: 15,
             minChunks: 1,
@@ -160,18 +153,17 @@ module.exports = (env, argv) => {
     plugins: [
       new HtmlWebpackPlugin({
         title: 'React App',
-        template: './src/index.html'
+        template: './src/index.html',
       }),
       new MiniCssExtractPlugin({
         filename: isDevelopment ? '[name].css' : '[name].[hash].css',
-        chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+        chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css',
       }),
-      new ESLintPlugin()
+      new ESLintPlugin(),
     ],
     resolve: {
       extensions: ['.js', '.jsx'],
-      alias: {}
-    }
-  }
-}
-
+      alias: {},
+    },
+  };
+};
